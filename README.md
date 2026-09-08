@@ -6,7 +6,9 @@
 
 - Женщина + молодой человек: [`output/split-face-portrait-bw.png`](output/split-face-portrait-bw.png)
 - Два мужчины (слева старший, справа младший с бородой): [`output/two-men-split-face-bw.png`](output/two-men-split-face-bw.png)
-- Две девушки (слева светлые волосы и тёмный глаз, справа волнистые волосы и светлый глаз): [`output/two-women-split-face-bw.png`](output/two-women-split-face-bw.png)
+- Две девушки с исходного фото (слева кружевная блузка и карие/ореховые глаза, справа голубые глаза и жемчуг у век): [`output/two-women-split-face-bw.png`](output/two-women-split-face-bw.png)
+
+Этот коллаж собран из реальных кропов исходника, без генерации чужих лиц.
 
 ## Что внутри
 
@@ -24,8 +26,8 @@ sudo apt-get install -y libegl1
 pip install -r requirements.txt
 
 python3 scripts/compose_split_face.py \
-  --left portraits/left-woman-frontal-bw.png \
-  --right portraits/right-woman-frontal-bw.png \
+  --left portraits/left-woman-isolated.jpg \
+  --right portraits/right-woman-isolated.jpg \
   --model models/face_landmarker.task \
   --out output/two-women-split-face-bw.png
 ```
