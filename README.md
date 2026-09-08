@@ -1,15 +1,18 @@
-# Чёрно-белый split-face портрет
+# Чёрно-белые split-face портреты
 
-Коллаж из двух фотографий: левая половина лица — женщина, правая — молодой человек. Черты не усредняются и не смешиваются: каждый пиксель принадлежит только одному человеку.
+Коллажи из двух лиц: левая половина — один человек, правая — другой. Черты не усредняются и не смешиваются: каждый пиксель принадлежит только одному человеку.
 
-Итоговый файл: [`output/split-face-portrait-bw.png`](output/split-face-portrait-bw.png)
+## Итоги
+
+- Женщина + молодой человек: [`output/split-face-portrait-bw.png`](output/split-face-portrait-bw.png)
+- Два мужчины (слева старший, справа младший с бородой): [`output/two-men-split-face-bw.png`](output/two-men-split-face-bw.png)
 
 ## Что внутри
 
 - `assets/` — исходные цветные фотографии
-- `portraits/` — чёрно-белые анфас-портреты с нейтральным выражением, снятые по исходникам
+- `portraits/` — чёрно-белые анфас-портреты с нейтральным выражением
 - `scripts/compose_split_face.py` — выравнивание по глазам и губам и жёсткий вертикальный стык по центру
-- `models/face_landmarker.task` — модель MediaPipe Face Landmarker для точек лица
+- `models/face_landmarker.task` — модель MediaPipe Face Landmarker
 
 ## Как собрать заново
 
@@ -20,10 +23,10 @@ sudo apt-get install -y libegl1
 pip install -r requirements.txt
 
 python3 scripts/compose_split_face.py \
-  --woman portraits/woman-frontal-bw.png \
-  --man portraits/man-frontal-bw.png \
+  --left portraits/older-man-frontal-bw.png \
+  --right portraits/bearded-man-frontal-bw.png \
   --model models/face_landmarker.task \
-  --out output/split-face-portrait-bw.png
+  --out output/two-men-split-face-bw.png
 ```
 
-Скрипт ставит оба лица в одну систему координат (линия глаз и центр губ), затем берёт левую половину женского кадра и правую половину мужского. Линия стыка проходит через середину лба, носа, губ и подбородка.
+Скрипт ставит оба лица в одну систему координат (линия глаз и центр губ), затем берёт левую половину первого кадра и правую половину второго. Линия стыка проходит через середину лба, носа, губ и подбородка.

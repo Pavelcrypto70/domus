@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Align two frontal portraits and join them on a hard vertical midline.
 
-Left half  = woman (viewer's left)
-Right half = man   (viewer's right)
+Left half  = --left  image (viewer's left)
+Right half = --right image (viewer's right)
 
 Features are not morphed or averaged: each pixel comes from exactly one source.
 """
@@ -111,8 +111,8 @@ def similarity_to_canonical(
 def canonical_dst(
     out_w: int,
     out_h: int,
-    woman_frame: dict[str, np.ndarray],
-    man_frame: dict[str, np.ndarray],
+    left_frame: dict[str, np.ndarray],
+    right_frame: dict[str, np.ndarray],
     eye_y_ratio: float = 0.42,
     eye_span_ratio: float = 0.28,
 ) -> np.ndarray:
@@ -126,8 +126,8 @@ def canonical_dst(
         return float(np.linalg.norm(frame["mouth"] - frame["eyes_mid"]))
 
     ratio = 0.5 * (
-        eye_to_mouth(woman_frame) / woman_frame["eye_span"]
-        + eye_to_mouth(man_frame) / man_frame["eye_span"]
+        eye_to_mouth(left_frame) / left_frame["eye_span"]
+        + eye_to_mouth(right_frame) / right_frame["eye_span"]
     )
     mouth_y = target_eye_y + ratio * target_eye_span
     return np.float32(
@@ -182,50 +182,50 @@ def hard_split(left: np.ndarray, right: np.ndarray) -> np.ndarray:
 
 
 def compose(
-    woman_bgr: np.ndarray,
-    man_bgr: np.ndarray,
+    left_bgr: np.ndarray,
+    right_bgr: np.ndarray,
     landmarker: vision.FaceLandmarker,
     out_size: tuple[int, int] = (1024, 1536),
 ) -> tuple[np.ndarray, dict]:
-    woman_pts = detect(landmarker, woman_bgr)
-    man_pts = detect(landmarker, man_bgr)
-    woman_frame = face_frame(woman_pts)
-    man_frame = face_frame(man_pts)
+    left_pts = detect(landmarker, left_bgr)
+    right_pts = detect(landmarker, right_bgr)
+    left_frame = face_frame(left_pts)
+    right_frame = face_frame(right_pts)
 
     out_w, out_h = out_size
-    dst = canonical_dst(out_w, out_h, woman_frame, man_frame)
-    woman_m = similarity_to_canonical(woman_frame, dst)
-    man_m = similarity_to_canonical(man_frame, dst)
+    dst = canonical_dst(out_w, out_h, left_frame, right_frame)
+    left_m = similarity_to_canonical(left_frame, dst)
+    right_m = similarity_to_canonical(right_frame, dst)
 
-    woman_aligned = to_bw(warp(woman_bgr, woman_m, (out_w, out_h)))
-    man_aligned = to_bw(warp(man_bgr, man_m, (out_w, out_h)))
-    woman_adj, man_adj = match_seam_luma(woman_aligned, man_aligned)
-    collage = hard_split(woman_adj, man_adj)
+    left_aligned = to_bw(warp(left_bgr, left_m, (out_w, out_h)))
+    right_aligned = to_bw(warp(right_bgr, right_m, (out_w, out_h)))
+    left_adj, right_adj = match_seam_luma(left_aligned, right_aligned)
+    collage = hard_split(left_adj, right_adj)
 
     debug = {
-        "woman_eye_span": woman_frame["eye_span"],
-        "man_eye_span": man_frame["eye_span"],
-        "woman_eye_angle": woman_frame["eye_angle"],
-        "man_eye_angle": man_frame["eye_angle"],
+        "left_eye_span": left_frame["eye_span"],
+        "right_eye_span": right_frame["eye_span"],
+        "left_eye_angle": left_frame["eye_angle"],
+        "right_eye_angle": right_frame["eye_angle"],
     }
     return collage, debug
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--woman", required=True)
-    parser.add_argument("--man", required=True)
+    parser.add_argument("--left", required=True, help="Portrait for the left half")
+    parser.add_argument("--right", required=True, help="Portrait for the right half")
     parser.add_argument("--model", required=True)
     parser.add_argument("--out", required=True)
     args = parser.parse_args()
 
-    woman = cv2.imread(args.woman, cv2.IMREAD_COLOR)
-    man = cv2.imread(args.man, cv2.IMREAD_COLOR)
-    if woman is None or man is None:
+    left = cv2.imread(args.left, cv2.IMREAD_COLOR)
+    right = cv2.imread(args.right, cv2.IMREAD_COLOR)
+    if left is None or right is None:
         raise SystemExit("Could not read source portraits")
 
     landmarker = load_landmarker(Path(args.model))
-    collage, debug = compose(woman, man, landmarker)
+    collage, debug = compose(left, right, landmarker)
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     cv2.imwrite(str(out_path), collage, [cv2.IMWRITE_PNG_COMPRESSION, 3])
