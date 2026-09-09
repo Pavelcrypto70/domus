@@ -1,35 +1,38 @@
-# Чёрно-белые split-face портреты
+# Дом L — визуализация
 
-Коллажи из двух лиц: левая половина — один человек, правая — другой. Черты не усредняются и не смешиваются: каждый пиксель принадлежит только одному человеку.
+Современный одноэтажный дом по линейному эскизу. Фасад: **графит**, **дерево**, **светлый бетон**. По периметру террасы — тёплая LED-подсветка.
 
-## Итоги
+В проекте две части:
 
-- Женщина + молодой человек: [`output/split-face-portrait-bw.png`](output/split-face-portrait-bw.png)
-- Два мужчины (слева старший, справа младший с бородой): [`output/two-men-split-face-bw.png`](output/two-men-split-face-bw.png)
-- Две девушки с исходного фото (слева кружевная блузка и карие/ореховые глаза, справа голубые глаза и жемчуг у век): [`output/two-women-split-face-bw.png`](output/two-women-split-face-bw.png)
+- фотореалистичные ракурсы в `public/renders/`
+- интерактивная 3D-модель того же L-объёма (вращение, день / ночь)
 
-Этот коллаж собран из реальных кропов исходника, без генерации чужих лиц.
+## Как запустить
+
+Нужны Node.js 20+ и npm.
+
+```bash
+npm install
+npm run dev -- --hostname 127.0.0.1 --port 43141
+```
+
+Откройте [http://127.0.0.1:43141](http://127.0.0.1:43141).
+
+Сборка:
+
+```bash
+npm run build
+npm start -- --hostname 127.0.0.1 --port 43141
+```
 
 ## Что внутри
 
-- `assets/` — исходные цветные фотографии
-- `portraits/` — чёрно-белые анфас-портреты с нейтральным выражением
-- `scripts/compose_split_face.py` — выравнивание по глазам и губам и жёсткий вертикальный стык по центру
-- `models/face_landmarker.task` — модель MediaPipe Face Landmarker
+- `public/renders/sketch.png` — исходный эскиз
+- `public/renders/house-sketch-angle.png` — рендер с того же ракурса
+- `public/renders/house-dusk-hero.png` — сумерки, главный кадр
+- `public/renders/house-terrace-night.png` — крупный план террасы
+- `public/renders/house-side-dusk.png` — боковой фасад
+- `public/renders/house-daylight.png` — дневной свет
+- `components/house-model.tsx` — геометрия L-дома
 
-## Как собрать заново
-
-Нужны Python 3.10+ и системная библиотека `libegl1` (MediaPipe).
-
-```bash
-sudo apt-get install -y libegl1
-pip install -r requirements.txt
-
-python3 scripts/compose_split_face.py \
-  --left portraits/left-woman-isolated.jpg \
-  --right portraits/right-woman-isolated.jpg \
-  --model models/face_landmarker.task \
-  --out output/two-women-split-face-bw.png
-```
-
-Скрипт ставит оба лица в одну систему координат (линия глаз и центр губ), затем берёт левую половину первого кадра и правую половину второго. Линия стыка проходит через середину лба, носа, губ и подбородка.
+В 3D-сцене ночной режим включён сразу, чтобы была видна линия подсветки по краю террасы.
