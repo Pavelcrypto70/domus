@@ -9,7 +9,7 @@ const THICK = 0.28;
 
 const LONG = { x0: -7.4, x1: 0, z0: -4.15, z1: 12.5 };
 const SHORT = { x0: -7.4, x1: 11.7, z0: -7.4, z1: 0 };
-const TERRACE = { x0: 0.18, x1: 9.35, z0: 0.18, z1: 8.7, h: 0.1 };
+const TERRACE = { x0: 0.18, x1: 9.35, z0: 0.18, z1: 8.7, h: 0.22 };
 
 function mid(a: number, b: number) {
   return (a + b) / 2;
@@ -25,8 +25,8 @@ function useMaps() {
     concrete.repeat.set(3, 2);
     const graphite = noiseTexture("#2c3035", "#121416", 500, false);
     graphite.repeat.set(2, 1);
-    const wood = noiseTexture("#c08a54", "#6e4324", 80, true);
-    wood.repeat.set(1, 4);
+    const wood = noiseTexture("#c59358", "#6e4324", 80, true);
+    wood.repeat.set(4, 1);
     return { concrete, graphite, wood };
   }, []);
 
@@ -294,9 +294,9 @@ export function HouseModel({ night }: { night: boolean }) {
         castShadow={false}
       />
 
-      {/* Perimeter LED */}
+      {/* Perimeter LED — under the raised slab so the terrace floats */}
       <Box
-        position={[mid(TERRACE.x0, TERRACE.x1), TERRACE.h + 0.015, TERRACE.z0]}
+        position={[mid(TERRACE.x0, TERRACE.x1), 0.03, TERRACE.z0]}
         size={[span(TERRACE.x0, TERRACE.x1) + 0.06, 0.03, 0.06]}
         color="#fff6e4"
         emissive="#ffcc80"
@@ -305,7 +305,7 @@ export function HouseModel({ night }: { night: boolean }) {
         castShadow={false}
       />
       <Box
-        position={[mid(TERRACE.x0, TERRACE.x1), TERRACE.h + 0.015, TERRACE.z1]}
+        position={[mid(TERRACE.x0, TERRACE.x1), 0.03, TERRACE.z1]}
         size={[span(TERRACE.x0, TERRACE.x1) + 0.06, 0.03, 0.06]}
         color="#fff6e4"
         emissive="#ffcc80"
@@ -314,7 +314,7 @@ export function HouseModel({ night }: { night: boolean }) {
         castShadow={false}
       />
       <Box
-        position={[TERRACE.x0, TERRACE.h + 0.015, mid(TERRACE.z0, TERRACE.z1)]}
+        position={[TERRACE.x0, 0.03, mid(TERRACE.z0, TERRACE.z1)]}
         size={[0.06, 0.03, span(TERRACE.z0, TERRACE.z1)]}
         color="#fff6e4"
         emissive="#ffcc80"
@@ -323,7 +323,7 @@ export function HouseModel({ night }: { night: boolean }) {
         castShadow={false}
       />
       <Box
-        position={[TERRACE.x1, TERRACE.h + 0.015, mid(TERRACE.z0, TERRACE.z1)]}
+        position={[TERRACE.x1, 0.03, mid(TERRACE.z0, TERRACE.z1)]}
         size={[0.06, 0.03, span(TERRACE.z0, TERRACE.z1)]}
         color="#fff6e4"
         emissive="#ffcc80"
@@ -331,6 +331,72 @@ export function HouseModel({ night }: { night: boolean }) {
         roughness={0.2}
         castShadow={false}
       />
+
+      {/* Soffit LED under fascia facing the courtyard */}
+      <Box
+        position={[0.2, WALL_H - 0.04, 6.2]}
+        size={[0.08, 0.03, 10.2]}
+        color="#fff6e4"
+        emissive="#ffcc80"
+        emissiveIntensity={night ? 4.2 : 0.5}
+        roughness={0.2}
+        castShadow={false}
+      />
+      <Box
+        position={[6.0, WALL_H - 0.04, 0.2]}
+        size={[10.0, 0.03, 0.08]}
+        color="#fff6e4"
+        emissive="#ffcc80"
+        emissiveIntensity={night ? 4.2 : 0.5}
+        roughness={0.2}
+        castShadow={false}
+      />
+
+      {/* Fire pit */}
+      <group position={[4.7, TERRACE.h + 0.12, 4.4]}>
+        <Box
+          position={[0, 0, 0]}
+          size={[1.15, 0.24, 1.15]}
+          color="#111111"
+          roughness={0.35}
+          metalness={0.4}
+        />
+        <mesh position={[0, 0.28, 0]}>
+          <coneGeometry args={[0.16, 0.42, 7]} />
+          <meshStandardMaterial
+            color="#ff7a2a"
+            emissive="#ff6a1a"
+            emissiveIntensity={night ? 5 : 0.15}
+            transparent
+            opacity={night ? 0.95 : 0.25}
+          />
+        </mesh>
+        {night ? (
+          <pointLight position={[0, 0.4, 0]} intensity={7} distance={6} color="#ff7a2a" />
+        ) : null}
+      </group>
+
+      {/* Up-down sconces on the graphite facade */}
+      <Box
+        position={[3.2, 1.7, SHORT.z0 + 0.18]}
+        size={[0.08, 0.42, 0.08]}
+        color="#111111"
+        roughness={0.3}
+        metalness={0.45}
+      />
+      <Box
+        position={[6.8, 1.7, SHORT.z0 + 0.18]}
+        size={[0.08, 0.42, 0.08]}
+        color="#111111"
+        roughness={0.3}
+        metalness={0.45}
+      />
+      {night ? (
+        <>
+          <pointLight position={[3.2, 2.1, SHORT.z0 + 0.4]} intensity={2.4} distance={4} color="#ffe0b0" />
+          <pointLight position={[6.8, 2.1, SHORT.z0 + 0.4]} intensity={2.4} distance={4} color="#ffe0b0" />
+        </>
+      ) : null}
 
       {night && (
         <>
@@ -369,24 +435,28 @@ export function HouseModel({ night }: { night: boolean }) {
         map={maps.concrete}
       />
 
-      {/* Outer concrete walls */}
+      {/* Left wing: horizontal wood. Right wing: graphite + concrete end. */}
       <Box
         position={[LONG.x0 + THICK / 2, WALL_H / 2, mid(LONG.z0, LONG.z1)]}
         size={[THICK, WALL_H, longD]}
-        color="#d5cec5"
-        map={maps.concrete}
+        color="#c59358"
+        map={maps.wood}
+        roughness={0.7}
       />
       <Box
         position={[mid(LONG.x0, LONG.x1), WALL_H / 2, LONG.z1 - THICK / 2]}
         size={[longW, WALL_H, THICK]}
-        color="#d5cec5"
-        map={maps.concrete}
+        color="#c59358"
+        map={maps.wood}
+        roughness={0.7}
       />
       <Box
         position={[mid(SHORT.x0, SHORT.x1), WALL_H / 2, SHORT.z0 + THICK / 2]}
         size={[shortW, WALL_H, THICK]}
-        color="#d5cec5"
-        map={maps.concrete}
+        color="#1a1a1b"
+        map={maps.graphite}
+        roughness={0.42}
+        metalness={0.18}
       />
       <Box
         position={[SHORT.x1 - THICK / 2, WALL_H / 2, mid(SHORT.z0, SHORT.z1)]}

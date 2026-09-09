@@ -1,9 +1,9 @@
-import Image from "next/image";
 import { ArrowDown, Lamp, Layers3, Spline } from "lucide-react";
 
 import { Gallery } from "@/components/gallery";
 import { HouseViewerSection } from "@/components/house-viewer-section";
 import { SiteHeader } from "@/components/site-header";
+import { SiteImage } from "@/components/site-image";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -11,19 +11,19 @@ import { cn } from "@/lib/utils";
 
 const MATERIALS = [
   {
-    name: "Графит",
-    tone: "bg-[#2a2d31]",
-    text: "Толстый пояс кровли, вертикальные панели и рамы остекления",
+    name: "Дерево",
+    tone: "bg-[#c59358]",
+    text: "Левое крыло: тёплые горизонтальные рейки на всю высоту фасада",
   },
   {
-    name: "Дерево",
-    tone: "bg-[#c08a54]",
-    text: "Вертикальные рейки у входа и тёплый софит под свесом",
+    name: "Графит",
+    tone: "bg-[#1a1a1b]",
+    text: "Правое крыло: матовые угольные панели, карниз и тонкие рамы",
   },
   {
     name: "Светлый бетон",
     tone: "bg-[#d5cfc6] text-zinc-800",
-    text: "Основные плоскости стен и плита террасы",
+    text: "Торцевая стена и плита приподнятой террасы",
   },
 ];
 
@@ -33,47 +33,46 @@ export default function Home() {
       <SiteHeader />
       <main id="top" className="flex-1">
         <section className="relative min-h-[88vh] overflow-hidden">
-          <Image
+          <SiteImage
             src="/renders/house-dusk-hero.png"
-            alt="Современный L-дом в сумерках с подсветкой террасы"
+            alt="Современный L-дом на сумерках: дерево, графит, бетон, очаг и LED по периметру террасы"
             fill
             priority
-            sizes="100vw"
             className="object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#111318] via-[#111318]/45 to-black/20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#111318] via-[#111318]/40 to-black/15" />
           <div className="relative mx-auto flex min-h-[88vh] max-w-6xl flex-col justify-end px-4 pb-14 pt-28 sm:px-6">
             <Badge className="mb-4 w-fit bg-black/45 text-white backdrop-blur">
-              По линейному эскизу
+              Архитектурная визуализация
             </Badge>
             <h1 className="font-heading max-w-3xl text-4xl leading-tight text-white sm:text-6xl">
               Современный дом:
               <span className="block text-wood">графит, дерево, светлый бетон</span>
             </h1>
             <p className="mt-4 max-w-xl text-base text-white/75 sm:text-lg">
-              Одноэтажный L-объём с плоской кровлей. Во внутреннем углу —
-              терраса с непрерывной LED-лентой по всему периметру.
+              L-объём на сумерках. Слева горизонтальное дерево, справа графит и
+              бетон. Терраса парит за счёт LED по периметру, в центре — очаг.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a
-                href="#model"
+                href="#gallery"
                 className={cn(
                   buttonVariants({ size: "lg" }),
                   "bg-wood text-zinc-950 hover:bg-wood/90"
                 )}
               >
-                Открыть 3D
-                <Spline data-icon="inline-end" />
+                Галерея ракурсов
+                <ArrowDown data-icon="inline-end" />
               </a>
               <a
-                href="#gallery"
+                href="#model"
                 className={cn(
                   buttonVariants({ size: "lg", variant: "outline" }),
                   "border-white/25 bg-black/30 text-white hover:bg-white/10"
                 )}
               >
-                Галерея ракурсов
-                <ArrowDown data-icon="inline-end" />
+                Открыть 3D
+                <Spline data-icon="inline-end" />
               </a>
             </div>
           </div>
@@ -106,9 +105,9 @@ export default function Home() {
           <div className="mt-4 flex items-start gap-3 rounded-2xl border border-wood/30 bg-wood/10 p-5">
             <Lamp className="mt-0.5 size-5 shrink-0 text-wood" />
             <p className="text-sm text-white/80 sm:text-base">
-              По периметру террасы — встроенная тёплая подсветка: непрерывная линия
-              по всем четырём граням плиты, чтобы площадка читалась вечером как
-              отдельный объём.
+              Свет: лента под карнизом, бра вверх-вниз на графите и непрерывный
+              LED по периметру приподнятой террасы. В центре площадки — чёрный
+              квадратный очаг.
             </p>
           </div>
         </section>
@@ -120,8 +119,8 @@ export default function Home() {
               Галерея визуализации
             </h2>
             <p className="mt-2 max-w-2xl text-white/65">
-              Фотореалистичные кадры с того же L-плана, включая ракурс, близкий к
-              исходному эскизу.
+              Фотореалистичные кадры в формате сумеречного двора: дерево, графит,
+              бетон, очаг и периметральная подсветка.
             </p>
           </div>
           <Gallery />
@@ -131,17 +130,16 @@ export default function Home() {
           <div className="mb-6">
             <p className="text-sm uppercase tracking-[0.2em] text-wood">Сверка</p>
             <h2 className="font-heading mt-1 text-3xl text-white sm:text-4xl">
-              Эскиз и тот же ракурс
+              Эскиз и визуализация
             </h2>
           </div>
           <div className="grid gap-4 lg:grid-cols-2">
             <figure className="overflow-hidden rounded-2xl border border-white/10 bg-zinc-200">
               <div className="relative aspect-[16/10]">
-                <Image
+                <SiteImage
                   src="/renders/sketch.png"
                   alt="Исходный линейный эскиз дома"
                   fill
-                  sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-contain p-6"
                 />
               </div>
@@ -151,16 +149,15 @@ export default function Home() {
             </figure>
             <figure className="overflow-hidden rounded-2xl border border-white/10">
               <div className="relative aspect-[16/10]">
-                <Image
-                  src="/renders/house-sketch-angle.png"
-                  alt="Рендер дома в ракурсе эскиза"
+                <SiteImage
+                  src="/renders/house-dusk-hero.png"
+                  alt="Сумеречная визуализация L-дома"
                   fill
-                  sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover"
                 />
               </div>
               <figcaption className="bg-[#111318] px-4 py-3 text-sm text-white/70">
-                Визуализация с того же угла
+                Тот же объём в сумерках
               </figcaption>
             </figure>
           </div>
@@ -173,9 +170,8 @@ export default function Home() {
               Модель по эскизу
             </h2>
             <p className="mt-2 text-white/65">
-              L-план, плоская кровля с графитовым поясом, дерево у внутреннего
-              угла и светлый бетон на глухих стенах. Ночью по краю террасы горит
-              периметральная лента.
+              Левое крыло — дерево, правое — графит и бетон. Ночью горят карниз,
+              периметр террасы и очаг.
             </p>
           </div>
           <HouseViewerSection />
@@ -183,8 +179,8 @@ export default function Home() {
 
         <Separator className="mx-auto max-w-6xl bg-white/10" />
         <footer className="mx-auto max-w-6xl px-4 py-10 text-sm text-white/45 sm:px-6">
-          Визуализация одноэтажного дома по эскизу. Материалы фасада: графит,
-          дерево, светлый бетон. Подсветка террасы — по периметру.
+          Визуализация одноэтажного L-дома. Материалы: дерево, графит, светлый
+          бетон. Подсветка террасы — по периметру.
         </footer>
       </main>
     </>

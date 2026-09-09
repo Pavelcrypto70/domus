@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 
+import { SiteImage } from "@/components/site-image";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
@@ -28,11 +28,10 @@ export function Gallery() {
             className="group overflow-hidden rounded-2xl border border-white/10 bg-white/5 text-left transition hover:border-wood/50"
           >
             <div className="relative aspect-[16/10] overflow-hidden bg-black/40">
-              <Image
+              <SiteImage
                 src={item.src}
                 alt={item.title}
                 fill
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 className={`object-cover transition duration-500 group-hover:scale-[1.03] ${
                   item.isSketch ? "bg-zinc-200 object-contain p-4" : ""
                 }`}
@@ -59,11 +58,10 @@ export function Gallery() {
           {active ? (
             <>
               <div className="relative aspect-video w-full bg-black">
-                <Image
+                <SiteImage
                   src={active.src}
                   alt={active.title}
                   fill
-                  sizes="96vw"
                   className={
                     active.isSketch
                       ? "object-contain bg-zinc-200 p-6"
