@@ -47,7 +47,7 @@ function noiseTexture(
   count: number,
   grain: boolean
 ) {
-  const size = 256;
+      const size = 64;
   const canvas = document.createElement("canvas");
   canvas.width = size;
   canvas.height = size;
@@ -120,43 +120,6 @@ function Box({
   );
 }
 
-function WoodSlats({
-  start,
-  length,
-  height,
-  axis,
-  y,
-  face,
-}: {
-  start: [number, number];
-  length: number;
-  height: number;
-  axis: "x" | "z";
-  y: number;
-  face: number;
-}) {
-  const slat = 0.11;
-  const gap = 0.018;
-  const n = Math.max(1, Math.floor(length / (slat + gap)));
-  const items = [];
-  for (let i = 0; i < n; i++) {
-    const offset = i * (slat + gap) + slat / 2;
-    const tone = i % 4 === 0 ? "#a87442" : i % 3 === 0 ? "#c99660" : "#b7844e";
-    const pos: [number, number, number] =
-      axis === "x"
-        ? [start[0] + offset, y, start[1] + face]
-        : [start[0] + face, y, start[1] + offset];
-    const size: [number, number, number] =
-      axis === "x" ? [slat, height, 0.055] : [0.055, height, slat];
-    items.push(
-      <mesh key={i} position={pos} castShadow receiveShadow>
-        <boxGeometry args={size} />
-        <meshStandardMaterial color={tone} roughness={0.68} metalness={0.02} />
-      </mesh>
-    );
-  }
-  return <group>{items}</group>;
-}
 
 function GlassWall({
   position,
@@ -506,21 +469,19 @@ export function HouseModel({ night }: { night: boolean }) {
       />
 
       {/* Recessed wood porch */}
-      <WoodSlats
-        start={[0.08, 0.08]}
-        length={2.7}
-        height={2.7}
-        axis="z"
-        y={1.45}
-        face={0.05}
+      <Box
+        position={[0.08, 1.45, 1.45]}
+        size={[0.08, 2.7, 2.7]}
+        color="#b7844e"
+        map={maps.wood}
+        roughness={0.62}
       />
-      <WoodSlats
-        start={[0.08, 0.08]}
-        length={2.7}
-        height={2.7}
-        axis="x"
-        y={1.45}
-        face={0.05}
+      <Box
+        position={[1.45, 1.45, 0.08]}
+        size={[2.7, 2.7, 0.08]}
+        color="#b7844e"
+        map={maps.wood}
+        roughness={0.62}
       />
       <Box
         position={[1.45, WALL_H - 0.06, 1.45]}

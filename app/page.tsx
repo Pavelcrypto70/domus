@@ -5,8 +5,9 @@ import { Gallery } from "@/components/gallery";
 import { HouseViewerSection } from "@/components/house-viewer-section";
 import { SiteHeader } from "@/components/site-header";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 
 const MATERIALS = [
   {
@@ -54,19 +55,26 @@ export default function Home() {
               терраса с непрерывной LED-лентой по всему периметру.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button render={<a href="#model" />} size="lg" className="bg-wood text-zinc-950 hover:bg-wood/90">
+              <a
+                href="#model"
+                className={cn(
+                  buttonVariants({ size: "lg" }),
+                  "bg-wood text-zinc-950 hover:bg-wood/90"
+                )}
+              >
                 Открыть 3D
                 <Spline data-icon="inline-end" />
-              </Button>
-              <Button
-                render={<a href="#gallery" />}
-                size="lg"
-                variant="outline"
-                className="border-white/25 bg-black/30 text-white hover:bg-white/10"
+              </a>
+              <a
+                href="#gallery"
+                className={cn(
+                  buttonVariants({ size: "lg", variant: "outline" }),
+                  "border-white/25 bg-black/30 text-white hover:bg-white/10"
+                )}
               >
                 Галерея ракурсов
                 <ArrowDown data-icon="inline-end" />
-              </Button>
+              </a>
             </div>
           </div>
         </section>
