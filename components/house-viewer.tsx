@@ -2,7 +2,7 @@
 
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import { Component, type ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Moon, RotateCcw, Sun } from "lucide-react";
 
 import { HouseModel } from "@/components/house-model";
@@ -38,7 +38,7 @@ function Scene({ night, resetToken }: { night: boolean; resetToken: number }) {
         </>
       )}
       <HouseModel night={night} />
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[1.5, 0.025, 2]} receiveShadow={false}>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[1.5, 0.025, 2]}>
         <circleGeometry args={[14, 40]} />
         <meshBasicMaterial color="#000000" transparent opacity={night ? 0.28 : 0.12} />
       </mesh>
@@ -66,7 +66,10 @@ function CameraReset({ token }: { token: number }) {
   useEffect(() => {
     if (token === 0) return;
     camera.position.set(...CAMERA_POS);
-    const orbit = controls as unknown as { target?: { set: (...args: number[]) => void }; update?: () => void } | null;
+    const orbit = controls as unknown as {
+      target?: { set: (...args: number[]) => void };
+      update?: () => void;
+    } | null;
     orbit?.target?.set(...TARGET);
     orbit?.update?.();
     camera.updateProjectionMatrix();
@@ -75,61 +78,40 @@ function CameraReset({ token }: { token: number }) {
   return null;
 }
 
-class ViewerErrorBoundary extends Component<
-  { children: ReactNode },
-  { message: string | null }
-> {
-  state = { message: null as string | null };
-
-  static getDerivedStateFromError(error: Error) {
-    return { message: error.message };
-  }
-
-  render() {
-    if (this.state.message) {
-      return (
-        <div className="flex h-full items-center justify-center px-6 text-center text-sm text-white/70">
-          Не удалось открыть 3D-сцену: {this.state.message}
-        </div>
-      );
-    }
-    return this.props.children;
-  }
-}
-
 export function HouseViewer() {
   const [night, setNight] = useState(true);
   const [resetToken, setResetToken] = useState(0);
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0a1220]">
-      <div className="h-[min(72vh,760px)] w-full" style={{ background: night ? "#0a1220" : "#d5e1ea" }}>
-        <ViewerErrorBoundary>
-          <Canvas
-            dpr={1}
-            camera={{ position: CAMERA_POS, fov: 38, near: 0.1, far: 90 }}
-            gl={{
-              antialias: false,
-              alpha: false,
-              powerPreference: "default",
-              failIfMajorPerformanceCaveat: false,
-              preserveDrawingBuffer: true,
-              stencil: false,
-              depth: true,
-            }}
-            onCreated={({ gl }) => {
-              gl.setClearColor(night ? "#0a1220" : "#d5e1ea", 1);
-              gl.domElement.addEventListener(
-                "webglcontextlost",
-                (event) => event.preventDefault(),
-                false
-              );
-            }}
-            style={{ background: night ? "#0a1220" : "#d5e1ea" }}
-          >
-            <Scene night={night} resetToken={resetToken} />
-          </Canvas>
-        </ViewerErrorBoundary>
+      <div
+        className="h-[min(72vh,760px)] w-full"
+        style={{ background: night ? "#0a1220" : "#d5e1ea" }}
+      >
+        <Canvas
+          dpr={1}
+          camera={{ position: CAMERA_POS, fov: 38, near: 0.1, far: 90 }}
+          gl={{
+            antialias: false,
+            alpha: false,
+            powerPreference: "default",
+            failIfMajorPerformanceCaveat: false,
+            preserveDrawingBuffer: true,
+            stencil: false,
+            depth: true,
+          }}
+          onCreated={({ gl }) => {
+            gl.setClearColor("#0a1220", 1);
+            gl.domElement.addEventListener(
+              "webglcontextlost",
+              (event) => event.preventDefault(),
+              false
+            );
+          }}
+          style={{ background: night ? "#0a1220" : "#d5e1ea" }}
+        >
+          <Scene night={night} resetToken={resetToken} />
+        </Canvas>
       </div>
 
       <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between p-4 sm:p-5">
