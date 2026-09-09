@@ -1,5 +1,7 @@
 # Дом L — визуализация
 
+Онлайн: **[https://pavelcrypto70.github.io/domus/](https://pavelcrypto70.github.io/domus/)**
+
 Современный одноэтажный дом по линейному эскизу. Фасад: **графит**, **дерево**, **светлый бетон**. По периметру террасы — тёплая LED-подсветка.
 
 В проекте две части:
@@ -18,11 +20,10 @@ npm run dev -- --hostname 127.0.0.1 --port 43141
 
 Откройте [http://127.0.0.1:43141](http://127.0.0.1:43141).
 
-Сборка:
+Статическая сборка (как на GitHub Pages):
 
 ```bash
-npm run build
-npm start -- --hostname 127.0.0.1 --port 43141
+GITHUB_PAGES=true npm run build
 ```
 
 ## Что внутри
